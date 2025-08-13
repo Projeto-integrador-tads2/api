@@ -52,10 +52,10 @@ Documentos da Tantto Tecnologia, orientações da Escola SENAI e literatura sobr
 ### 2.1 Oportunidade de Negócio
 A empresa carece de uma solução unificada para gerenciar leads e vendas, comprometendo sua eficiência comercial.
 
-### 🛠 2.2 Problema a Ser Resolvido
+### 2.2 Problema a Ser Resolvido
 A ausência de um sistema CRM compromete o acompanhamento de oportunidades, organização de contatos e análise de dados comerciais.
 
-### 📋 2.3 Descrição do Produto
+### 2.3 Descrição do Produto
 Sistema CRM com:
 - Gestão de contatos
 - Funil de vendas visual
@@ -79,7 +79,7 @@ Sistema CRM com:
 - Gestores  
 - Administradores  
 
-### 📈 3.3 Necessidades
+### 3.3 Necessidades
 - Organizar contatos  
 - Acompanhar negociações  
 - Gerar relatórios  
@@ -97,13 +97,13 @@ Sistema CRM com:
 ### 4.1 Perspectiva
 Sistema desenvolvido sob medida, com possibilidade de integrações futuras.
 
-### ⚙ 4.2 Funcionalidades
+### 4.2 Funcionalidades
 - Cadastro de leads  
 - Visualização Kanban  
 - Relatórios e dashboards  
 - Login com controle de perfil  
 
-### 🔗 4.3 Suposições e Dependências
+### 4.3 Suposições e Dependências
 **Front-end:**
 - Next.js + TypeScript  
 - React, Yup, NextAuth  
