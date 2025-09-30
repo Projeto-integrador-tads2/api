@@ -20,7 +20,7 @@ namespace Models
         [Required]
         public Guid User_Id { get; set; }
 
-        [ForeignKey("UserId")]
+        [ForeignKey("User_Id")]
         public UserModel User { get; set; } = null!;
         
         [Required]

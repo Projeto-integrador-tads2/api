@@ -12,7 +12,7 @@ namespace Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public string Name { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
 
         [Required]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
@@ -25,9 +25,9 @@ namespace Models
         public string Color { get; set; } = string.Empty;
 
         [Required]
-        public Guid UserId { get; set; }
+        public Guid User_Id { get; set; }
 
-        [ForeignKey("UserId")]
+        [ForeignKey("User_Id")]
         public UserModel User { get; set; } = null!;
 
         [Required]
