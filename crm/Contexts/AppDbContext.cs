@@ -11,11 +11,10 @@ namespace Data
         public DbSet<ClientModel> Clients { get; set; }
         public DbSet<CompanyCardModel> Cards { get; set; }
         public DbSet<CompanyModel> Company { get; set; }
-        public DbSet<HistoryModel> Historys { get; set; }
+        public DbSet<HistoryModel> Histories { get; set; }
         public DbSet<ObservationModel> Observations { get; set; }
         public DbSet<StepColumnModel> StepColumn { get; set; }
         public DbSet<UserModel> User { get; set; }
-        public DbSet<ErrorViewModel> ErrorViews { get; set; }
         
     }
 }
