@@ -17,7 +17,7 @@ namespace Models
         public string Password { get; set; } = string.Empty;
 
         [Required]
-        public string Telefone { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
