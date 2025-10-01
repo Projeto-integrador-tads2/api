@@ -31,7 +31,7 @@ namespace Models
         public UserModel User { get; set; } = null!;
 
         [Required]
-        public Guid StepColum_Id { get; set; }
+        public Guid StepColumn_Id { get; set; }
 
         [ForeignKey("StepColumn_Id")]
         public StepColumnModel StepColumn { get; set; } = null!;

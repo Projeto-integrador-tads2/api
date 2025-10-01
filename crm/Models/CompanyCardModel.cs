@@ -6,16 +6,16 @@ namespace Models
     public class CompanyCardModel
     {
         [Key]
-        private Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         public Guid UserId { get; set; }
 
         [Required]
-        private DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         [Required]
-        private DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         
         [Required]
         public Guid User_Id { get; set; }
@@ -27,6 +27,6 @@ namespace Models
         public Guid StepColumn_Id { get; set; }
 
         [ForeignKey("StepColumn_Id")]
-        public UserModel StepColumn { get; set; } = null!;
+        public StepColumnModel StepColumn { get; set; } = null!;
     }
 }

@@ -5,22 +5,22 @@ namespace Models
     public class StepColumnModel
     {
         [Key]
-        private Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        private string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
-        private DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         
         [Required]
-        private DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         [Required]
-        private int Order { get; set; }
+        public int Order { get; set; }
 
         [Required]
         [StringLength(6, MinimumLength = 6)]
-        private string Color { get; set; } = string.Empty;
+        public string Color { get; set; } = string.Empty;
     }
 }

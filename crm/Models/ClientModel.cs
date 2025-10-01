@@ -6,7 +6,7 @@ namespace Models
     public class ClientModel
     {
         [Key]
-        private Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
     
         [Required]
         public Guid ClientId { get; set; }

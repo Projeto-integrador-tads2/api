@@ -12,13 +12,13 @@ namespace Models
         public DateTime MovedAt { get; set; }
 
         [Required]
-        public string Moved_To { get; set; } = string.Empty;
+        public Guid Moved_To { get; set; }
 
         [ForeignKey("Moved_To")]
         public StepColumnModel StepColumn { get; set; } = null!;
         
         [Required]
-        public string Card_Id { get; set; } = string.Empty;
+        public Guid Card_Id { get; set; }
         
         [ForeignKey("Card_Id")]
         public CompanyCardModel Card { get; set; } = null!;
