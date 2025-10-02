@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Services;
 using Microsoft.OpenApi.Models;
 using MediatR;
 using System.Reflection;
@@ -72,9 +71,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
-// Register only EmailService (AuthService is replaced by CQRS)
-builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
