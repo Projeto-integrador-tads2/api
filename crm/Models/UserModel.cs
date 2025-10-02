@@ -1,28 +1,58 @@
-using System.ComponentModel.DataAnnotations;
+using System;
+using Ardalis.GuardClauses;
 
 namespace Models
 {
-    public class UserModel
+    public class UserModel : BaseEFEntity
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Name { get; private set; }
+        public string Email { get; private set; }
+        public string Password { get; private set; }
+        public string Phone { get; private set; }
 
-        [Required]
-        public string Name { get; set; } = string.Empty;
+        public UserModel(string name, string email, string password, string phone)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NullOrEmpty(email, nameof(email));
+            Guard.Against.NullOrWhiteSpace(email, nameof(email));
+            Guard.Against.NullOrEmpty(password, nameof(password));
+            Guard.Against.NullOrWhiteSpace(password, nameof(password));
+            Guard.Against.NullOrEmpty(phone, nameof(phone));
+            Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
+            
+            Name = name;
+            Email = email;
+            Password = password;
+            Phone = phone;
+        }
 
-        [Required]
-        public string Email { get; set; } = string.Empty;
+        private UserModel()
+        {
+        }
 
-        [Required]
-        public string Password { get; set; } = string.Empty;
+        public void Update(string name, string email, string phone)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NullOrEmpty(email, nameof(email));
+            Guard.Against.NullOrWhiteSpace(email, nameof(email));
+            Guard.Against.NullOrEmpty(phone, nameof(phone));
+            Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
+            
+            Name = name;
+            Email = email;
+            Phone = phone;
+            SetUpdatedAt();
+        }
 
-        [Required]
-        public string Phone { get; set; } = string.Empty;
-
-        [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        [Required]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public void UpdatePassword(string password)
+        {
+            Guard.Against.NullOrEmpty(password, nameof(password));
+            Guard.Against.NullOrWhiteSpace(password, nameof(password));
+            
+            Password = password;
+            SetUpdatedAt();
+        }
     }
 }

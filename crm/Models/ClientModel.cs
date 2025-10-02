@@ -1,29 +1,45 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System;
+using Ardalis.GuardClauses;
 
 namespace Models
 {
-    public class ClientModel
+    public class ClientModel : BaseEFEntity
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
-    
-        [Required]
-        public Guid ClientId { get; set; }
+        public string Name { get; private set; }
+        public string Email { get; private set; }
+        public string Phone { get; private set; }
 
-        [Required]
-        public string Name { get; set; } = string.Empty;
+        public ClientModel(string name, string email, string phone)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NullOrEmpty(email, nameof(email));
+            Guard.Against.NullOrWhiteSpace(email, nameof(email));
+            Guard.Against.NullOrEmpty(phone, nameof(phone));
+            Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
+            
+            Name = name;
+            Email = email;
+            Phone = phone;
+        }
 
-        [Required]
-        public string Email { get; set; } = string.Empty;
+        private ClientModel()
+        {
+        }
 
-        [Required]
-        public string Phone { get; set; } = string.Empty;
-
-        [Required]
-        private DateTime UpdatedAt { get; set; }
-
-        [Required]
-        private DateTime CreatedAt { get; set; }
+        public void Update(string name, string email, string phone)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NullOrEmpty(email, nameof(email));
+            Guard.Against.NullOrWhiteSpace(email, nameof(email));
+            Guard.Against.NullOrEmpty(phone, nameof(phone));
+            Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
+            
+            Name = name;
+            Email = email;
+            Phone = phone;
+            SetUpdatedAt();
+        }
     }
 }

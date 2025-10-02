@@ -1,33 +1,45 @@
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ardalis.GuardClauses;
 
 namespace Models
 {
-    public class CompanyModel
+    public class CompanyModel : BaseEFEntity
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Name { get; private set; }
+        public string Cnpj { get; private set; }
+        public Guid ClientId { get; private set; }
+        public ClientModel Client { get; private set; }
 
-        [Required]
-        public Guid ClientId { get; set; }
+        public CompanyModel(string name, string cnpj, Guid clientId)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NullOrEmpty(cnpj, nameof(cnpj));
+            Guard.Against.NullOrWhiteSpace(cnpj, nameof(cnpj));
+            Guard.Against.Default(clientId, nameof(clientId));
+            
+            Name = name;
+            Cnpj = cnpj;
+            ClientId = clientId;
+        }
 
-        [Required]
-        public string Name { get; set; } = string.Empty;
+        private CompanyModel()
+        {
+        }
 
-        [Required]
-        public string Cnpj { get; set; } = string.Empty;
-
-        [Required]
-        private DateTime UpdatedAt { get; set; }
-
-        [Required]
-        private DateTime CreatedAt { get; set; }
-
-        [Required]
-        public Guid Client_Id { get; set; }
-
-        [ForeignKey("ClientId")]
-        public ClientModel Client { get; set; } = null!;
-        
+        public void Update(string name, string cnpj, Guid clientId)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NullOrEmpty(cnpj, nameof(cnpj));
+            Guard.Against.NullOrWhiteSpace(cnpj, nameof(cnpj));
+            Guard.Against.Default(clientId, nameof(clientId));
+            
+            Name = name;
+            Cnpj = cnpj;
+            ClientId = clientId;
+            SetUpdatedAt();
+        }
     }
 }
