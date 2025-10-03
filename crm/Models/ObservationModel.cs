@@ -1,39 +1,52 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ardalis.GuardClauses;
 
 namespace Models
 {
-    public class ObservationModel
+    public class ObservationModel : BaseEFEntity
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Title { get; private set; }
+        public string Content { get; private set; }
+        public Guid UserId { get; private set; }
+        public Guid CompanyCardId { get; private set; }
+      
+        [ForeignKey("UserId")]
+        public virtual UserModel User { get; private set; }
 
-        [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [ForeignKey("CompanyCardId")]
+        public virtual CompanyCardModel CompanyCard { get; private set; }
 
-        [Required]
-        public string Title { get; set; } = string.Empty;
+        public ObservationModel(string title, string content, Guid userId, Guid companyCardId, bool isInternal = false)
+        {
+            Guard.Against.NullOrEmpty(title, nameof(title));
+            Guard.Against.NullOrWhiteSpace(title, nameof(title));
+            Guard.Against.NullOrEmpty(content, nameof(content));
+            Guard.Against.NullOrWhiteSpace(content, nameof(content));
+            Guard.Against.Default(userId, nameof(userId));
+            Guard.Against.Default(companyCardId, nameof(companyCardId));
+            
+            Title = title;
+            Content = content;
+            UserId = userId;
+            CompanyCardId = companyCardId;
+        }
 
-        [Required]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        private ObservationModel()
+        {
+        }
 
-        [Required]
-        public int Order { get; set; }
-
-        [Required]
-        [StringLength(6, MinimumLength = 6)]
-        public string Color { get; set; } = string.Empty;
-
-        [Required]
-        public Guid User_Id { get; set; }
-
-        [ForeignKey("User_Id")]
-        public UserModel User { get; set; } = null!;
-
-        [Required]
-        public Guid StepColumn_Id { get; set; }
-
-        [ForeignKey("StepColumn_Id")]
-        public StepColumnModel StepColumn { get; set; } = null!;
+        public void Update(string title, string content)
+        {
+            Guard.Against.NullOrEmpty(title, nameof(title));
+            Guard.Against.NullOrWhiteSpace(title, nameof(title));
+            Guard.Against.NullOrEmpty(content, nameof(content));
+            Guard.Against.NullOrWhiteSpace(content, nameof(content));
+            
+            Title = title;
+            Content = content;
+            SetUpdatedAt();
+        }
     }
 }

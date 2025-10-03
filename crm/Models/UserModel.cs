@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Ardalis.GuardClauses;
 
 namespace Models
@@ -9,8 +10,12 @@ namespace Models
         public string Email { get; private set; }
         public string Password { get; private set; }
         public string Phone { get; private set; }
+        public string? ProfilePicture { get; private set; }
 
-        public UserModel(string name, string email, string password, string phone)
+        public virtual ICollection<CompanyCardModel> Cards { get; private set; } = new List<CompanyCardModel>();
+        public virtual ICollection<ObservationModel> Observations { get; private set; } = new List<ObservationModel>();
+
+        public UserModel(string name, string email, string password, string phone, string? profilePicture = null)
         {
             Guard.Against.NullOrEmpty(name, nameof(name));
             Guard.Against.NullOrWhiteSpace(name, nameof(name));
@@ -25,13 +30,14 @@ namespace Models
             Email = email;
             Password = password;
             Phone = phone;
+            ProfilePicture = profilePicture;
         }
 
         private UserModel()
         {
         }
 
-        public void Update(string name, string email, string phone)
+        public void Update(string name, string email, string phone, string? profilePicture = null)
         {
             Guard.Against.NullOrEmpty(name, nameof(name));
             Guard.Against.NullOrWhiteSpace(name, nameof(name));
@@ -43,6 +49,8 @@ namespace Models
             Name = name;
             Email = email;
             Phone = phone;
+            if (profilePicture != null)
+                ProfilePicture = profilePicture;
             SetUpdatedAt();
         }
 
@@ -52,6 +60,12 @@ namespace Models
             Guard.Against.NullOrWhiteSpace(password, nameof(password));
             
             Password = password;
+            SetUpdatedAt();
+        }
+
+        public void UpdateProfilePicture(string? profilePicture)
+        {
+            ProfilePicture = profilePicture;
             SetUpdatedAt();
         }
     }

@@ -1,6 +1,7 @@
 using ApiMvcSwagger.Models;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Data.Configurations;
 
 namespace Data
 {
@@ -15,6 +16,13 @@ namespace Data
         public DbSet<ObservationModel> Observations { get; set; }
         public DbSet<StepColumnModel> StepColumn { get; set; }
         public DbSet<UserModel> User { get; set; }
-        
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new HistoryModelConfiguration());
+            modelBuilder.ApplyConfiguration(new ClientCompanyConfiguration());
+        }
     }
 }

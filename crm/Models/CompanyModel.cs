@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Ardalis.GuardClauses;
 
@@ -9,9 +10,12 @@ namespace Models
         public string Name { get; private set; }
         public string Cnpj { get; private set; }
         public Guid ClientId { get; private set; }
-        public ClientModel Client { get; private set; }
+        public string? CompanyPicture { get; private set; }
 
-        public CompanyModel(string name, string cnpj, Guid clientId)
+        public virtual ClientModel Client { get; private set; }
+        public virtual ICollection<CompanyCardModel> Cards { get; private set; } = new List<CompanyCardModel>();
+
+        public CompanyModel(string name, string cnpj, Guid clientId, string? companyPicture = null)
         {
             Guard.Against.NullOrEmpty(name, nameof(name));
             Guard.Against.NullOrWhiteSpace(name, nameof(name));
@@ -22,13 +26,14 @@ namespace Models
             Name = name;
             Cnpj = cnpj;
             ClientId = clientId;
+            CompanyPicture = companyPicture;
         }
 
         private CompanyModel()
         {
         }
 
-        public void Update(string name, string cnpj, Guid clientId)
+        public void Update(string name, string cnpj, Guid clientId, string? companyPicture = null)
         {
             Guard.Against.NullOrEmpty(name, nameof(name));
             Guard.Against.NullOrWhiteSpace(name, nameof(name));
@@ -39,6 +44,14 @@ namespace Models
             Name = name;
             Cnpj = cnpj;
             ClientId = clientId;
+            if (companyPicture != null)
+                CompanyPicture = companyPicture;
+            SetUpdatedAt();
+        }
+
+        public void UpdateCompanyPicture(string? companyPicture)
+        {
+            CompanyPicture = companyPicture;
             SetUpdatedAt();
         }
     }

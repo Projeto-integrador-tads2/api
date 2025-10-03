@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Ardalis.GuardClauses;
 
 namespace Models
@@ -8,6 +9,10 @@ namespace Models
         public string Name { get; private set; }
         public string Email { get; private set; }
         public string Phone { get; private set; }
+        public Guid? CompanyId { get; private set; }
+        
+        [ForeignKey("CompanyId")]
+        public virtual CompanyModel? Company { get; private set; }
 
         public ClientModel(string name, string email, string phone)
         {

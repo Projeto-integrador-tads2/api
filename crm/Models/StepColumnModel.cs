@@ -1,26 +1,77 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Ardalis.GuardClauses;
 
 namespace Models
 {
-    public class StepColumnModel
+    public class StepColumnModel : BaseEFEntity
     {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
-        [Required]
-        public string Name { get; set; } = string.Empty;
-
-        [Required]
-        public DateTime CreatedAt { get; set; }
+        public string Name { get; private set; }
+        public int Order { get; private set; }
+        public string Color { get; private set; }
+        public bool IsActive { get; private set; }
         
-        [Required]
-        public DateTime UpdatedAt { get; set; }
+        public virtual ICollection<CompanyCardModel> Cards { get; private set; } = new List<CompanyCardModel>();
+        public virtual ICollection<HistoryModel> HistoriesAsFrom { get; private set; } = new List<HistoryModel>();
+        public virtual ICollection<HistoryModel> HistoriesAsTo { get; private set; } = new List<HistoryModel>();
 
-        [Required]
-        public int Order { get; set; }
+        public StepColumnModel(string name, int order, string color)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NegativeOrZero(order, nameof(order));
+            Guard.Against.NullOrEmpty(color, nameof(color));
+            
+            if (!System.Text.RegularExpressions.Regex.IsMatch(color, @"^#[0-9A-Fa-f]{6}$"))
+            {
+                throw new ArgumentException("Color must be in hex format (#RRGGBB)", nameof(color));
+            }
+            
+            Name = name;
+            Order = order;
+            Color = color;
+            IsActive = true;
+        }
 
-        [Required]
-        [StringLength(6, MinimumLength = 6)]
-        public string Color { get; set; } = string.Empty;
+        private StepColumnModel()
+        {
+        }
+
+        public void Update(string name, string color)
+        {
+            Guard.Against.NullOrEmpty(name, nameof(name));
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.NullOrEmpty(color, nameof(color));
+            
+            if (!System.Text.RegularExpressions.Regex.IsMatch(color, @"^#[0-9A-Fa-f]{6}$"))
+            {
+                throw new ArgumentException("Color must be in hex format (#RRGGBB)", nameof(color));
+            }
+            
+            Name = name;
+            Color = color;
+            SetUpdatedAt();
+        }
+
+        public void UpdateOrder(int newOrder)
+        {
+            Guard.Against.NegativeOrZero(newOrder, nameof(newOrder));
+            
+            Order = newOrder;
+            SetUpdatedAt();
+        }
+
+        public void Activate()
+        {
+            IsActive = true;
+            SetUpdatedAt();
+        }
+
+        public void Deactivate()
+        {
+            IsActive = false;
+            SetUpdatedAt();
+        }
     }
 }
