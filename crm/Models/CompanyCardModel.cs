@@ -10,7 +10,16 @@ namespace Models
         public Guid UserId { get; private set; }
         public Guid CompanyId { get; private set; }
         public Guid StepColumnId { get; private set; }
-        
+
+        public double? Price { get; private set; }
+
+        public DateTime? ClosingDate { get; private set; }
+
+        public DateTime? OpenedDate { get; private set; }
+
+        [ForeignKey("ServiceId")]
+        public virtual ServiceModel Service { get; private set; }
+
         [ForeignKey("UserId")]
         public virtual UserModel User { get; private set; }
         
