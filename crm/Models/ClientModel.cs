@@ -10,9 +10,9 @@ namespace Models
         public string Email { get; private set; }
         public string Phone { get; private set; }
         public Guid? CompanyId { get; private set; }
-        
+
         [ForeignKey("CompanyId")]
-        public virtual CompanyModel? Company { get; private set; }
+        public virtual CompanyModel Company { get; private set; }
 
         public ClientModel(string name, string email, string phone)
         {
@@ -22,7 +22,7 @@ namespace Models
             Guard.Against.NullOrWhiteSpace(email, nameof(email));
             Guard.Against.NullOrEmpty(phone, nameof(phone));
             Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
-            
+
             Name = name;
             Email = email;
             Phone = phone;
@@ -40,7 +40,7 @@ namespace Models
             Guard.Against.NullOrWhiteSpace(email, nameof(email));
             Guard.Against.NullOrEmpty(phone, nameof(phone));
             Guard.Against.NullOrWhiteSpace(phone, nameof(phone));
-            
+
             Name = name;
             Email = email;
             Phone = phone;

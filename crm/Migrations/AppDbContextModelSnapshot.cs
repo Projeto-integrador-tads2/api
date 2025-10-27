@@ -254,6 +254,9 @@ namespace ApiMvcSwagger.Migrations
                     b.Property<string>("ProfilePicture")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 

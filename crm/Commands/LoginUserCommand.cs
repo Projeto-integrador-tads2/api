@@ -16,7 +16,7 @@ namespace Commands
         [Required(ErrorMessage = "Email é obrigatório")]
         [EmailAddress(ErrorMessage = "Email inválido")]
         public string Email { get; set; } = string.Empty;
-        
+
         [Required(ErrorMessage = "Senha é obrigatória")]
         public string Password { get; set; } = string.Empty;
     }
@@ -27,6 +27,7 @@ namespace Commands
         public string UserId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
     }
 
@@ -48,7 +49,7 @@ namespace Commands
 
             var user = await _context.User.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
-            if (user == null || 
+            if (user == null ||
                 _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password) == PasswordVerificationResult.Failed)
                 throw new Exception("Usuário ou senha inválidos");
 
@@ -56,7 +57,8 @@ namespace Commands
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
@@ -77,6 +79,7 @@ namespace Commands
                 UserId = user.Id.ToString(),
                 Name = user.Name,
                 Email = user.Email,
+                Role = user.Role.ToString(),
                 Message = "Login realizado com sucesso"
             };
         }

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using MediatR;
 using Commands;
 using Dtos;
+using Attributes;
+using Enums;
 
 namespace Controllers
 {
@@ -21,6 +23,8 @@ namespace Controllers
         /// Registra um novo usuário
         /// </summary>
         [HttpPost("register")]
+        [Authorize]
+        [RequireRole(UserRole.Admin)]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             var command = new RegisterUserCommand

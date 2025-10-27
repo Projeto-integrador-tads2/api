@@ -10,7 +10,7 @@ namespace Models
         public string Name { get; private set; }
         public string Cnpj { get; private set; }
         public Guid ClientId { get; private set; }
-        public string? CompanyPicture { get; private set; }
+        public string CompanyPicture { get; private set; }
 
         public virtual ClientModel Client { get; private set; }
         public virtual ICollection<CompanyCardModel> Cards { get; private set; } = new List<CompanyCardModel>();
@@ -22,7 +22,7 @@ namespace Models
             Guard.Against.NullOrEmpty(cnpj, nameof(cnpj));
             Guard.Against.NullOrWhiteSpace(cnpj, nameof(cnpj));
             Guard.Against.Default(clientId, nameof(clientId));
-            
+
             Name = name;
             Cnpj = cnpj;
             ClientId = clientId;
@@ -40,7 +40,7 @@ namespace Models
             Guard.Against.NullOrEmpty(cnpj, nameof(cnpj));
             Guard.Against.NullOrWhiteSpace(cnpj, nameof(cnpj));
             Guard.Against.Default(clientId, nameof(clientId));
-            
+
             Name = name;
             Cnpj = cnpj;
             ClientId = clientId;
