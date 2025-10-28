@@ -69,5 +69,40 @@ namespace Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+
+        /// <summary>
+        /// DESENVOLVIMENTO: Cria usuário de teste (REMOVER EM PRODUÇÃO!)
+        /// </summary>
+        [HttpPost("create-test-user")]
+        public async Task<IActionResult> CreateTestUser()
+        {
+            var command = new RegisterUserCommand
+            {
+                Name = "Gabriel",
+                Email = "gabriel@gmail.com",
+                Password = "gabriel@123",
+                Phone = "15999673508"
+            };
+
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(new
+                {
+                    message = "Usuário de teste criado com sucesso!",
+                    userId = result.UserId,
+                    email = result.Email,
+                    testCredentials = new
+                    {
+                        email = "gabriel@gmail.com",
+                        password = "gabriel@123"
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

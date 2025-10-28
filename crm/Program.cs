@@ -1,5 +1,6 @@
 
 using Data;
+using Data.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -89,16 +90,21 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
+
         context.Database.Migrate();
-        Console.WriteLine("✅ Migrations aplicadas com sucesso!");
+        logger.LogInformation("✅ Migrations aplicadas com sucesso!");
+
+        await DatabaseSeeder.SeedAsync(context, logger);
+        logger.LogInformation("✅ Seed executado com sucesso!");
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "❌ Erro ao aplicar migrations");
+        logger.LogError(ex, "❌ Erro ao inicializar banco de dados");
     }
 }
 
