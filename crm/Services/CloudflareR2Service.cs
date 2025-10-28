@@ -15,9 +15,13 @@ namespace Services
         {
             var config = configuration.GetSection("CloudflareR2");
 
+            var serviceUrl = config["ServiceURL"];
+
             var clientConfig = new AmazonS3Config
             {
-                ServiceURL = $"https://{config["AccountId"]}.r2.cloudflarestorage.com",
+                ServiceURL = !string.IsNullOrEmpty(serviceUrl)
+                    ? serviceUrl
+                    : $"https://{config["AccountId"]}.r2.cloudflarestorage.com",
                 ForcePathStyle = true
             };
 

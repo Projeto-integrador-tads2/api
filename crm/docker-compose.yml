@@ -1,6 +1,27 @@
-version: '3.8'
+version: "3.8"
 
 services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: always
+    ports:
+      - "9002:9000" # API
+      - "9003:9001" # Console Web UI
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - crm-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
   mysql:
     image: mysql:8.0
     container_name: mysql-db
@@ -29,8 +50,14 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=mysql;Database=crm;User=crmuser;Password=crmpass;
+      - CloudflareR2__ServiceURL=http://minio:9000
+      - CloudflareR2__AccessKeyId=minioadmin
+      - CloudflareR2__SecretAccessKey=minioadmin123
+      - CloudflareR2__BucketName=crm-files
+      - CloudflareR2__PublicUrl=http://localhost:9002/crm-files
     depends_on:
       - mysql
+      - minio
     networks:
       - crm-network
 
@@ -40,3 +67,4 @@ networks:
 
 volumes:
   db_data:
+  minio_data:
