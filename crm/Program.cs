@@ -26,6 +26,10 @@ builder.Services.Configure<FormOptions>(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<Filters.ApiResponseWrapperFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
