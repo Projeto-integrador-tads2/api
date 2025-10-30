@@ -15,9 +15,6 @@ namespace Commands
         [Required(ErrorMessage = "CNPJ é obrigatório")]
         public string Cnpj { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Cliente é obrigatório")]
-        public Guid ClientId { get; set; }
-
         public string? CompanyPicture { get; set; }
     }
 
@@ -26,7 +23,6 @@ namespace Commands
         public Guid CompanyId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Cnpj { get; set; } = string.Empty;
-        public Guid ClientId { get; set; }
         public string? CompanyPicture { get; set; }
         public string? Message { get; set; }
     }
@@ -45,7 +41,7 @@ namespace Commands
             if (await _context.Company.AnyAsync(c => c.Cnpj == request.Cnpj, cancellationToken))
                 throw new Exception("CNPJ já cadastrado");
 
-            var company = new CompanyModel(request.Name, request.Cnpj, request.ClientId, request.CompanyPicture);
+            var company = new CompanyModel(request.Name, request.Cnpj, request.CompanyPicture);
             _context.Company.Add(company);
             await _context.SaveChangesAsync(cancellationToken);
 
@@ -54,7 +50,6 @@ namespace Commands
                 CompanyId = company.Id,
                 Name = company.Name,
                 Cnpj = company.Cnpj,
-                ClientId = company.ClientId,
                 CompanyPicture = company.CompanyPicture,
                 Message = "Empresa cadastrada com sucesso"
             };
