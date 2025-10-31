@@ -1,4 +1,5 @@
 using Models;
+using Enums;
 
 namespace Interfaces
 {
@@ -6,5 +7,8 @@ namespace Interfaces
     {
         Task<UserModel?> GetCurrentUserAsync();
         Guid? GetCurrentUserId();
+        string? GetCurrentUserName();
+        string? GetCurrentUserEmail();
+        UserRole? GetCurrentUserRole();
     }
 }
