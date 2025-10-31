@@ -32,6 +32,7 @@ namespace Models
             Name = name;
             Description = description;
             ServicePicture = servicePicture;
+            SetUpdatedAt();
         }
     }
 }
