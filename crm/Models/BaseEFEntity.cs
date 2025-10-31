@@ -15,19 +15,16 @@ namespace Models
         {
             try
             {
-                // Windows
                 return TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
             }
             catch (TimeZoneNotFoundException)
             {
                 try
                 {
-                    // Linux/Mac
                     return TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
                 }
                 catch (TimeZoneNotFoundException)
                 {
-                    // Fallback: cria manualmente UTC-3
                     return TimeZoneInfo.CreateCustomTimeZone(
                         "Brasilia Standard Time",
                         TimeSpan.FromHours(-3),

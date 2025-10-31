@@ -29,3 +29,5 @@ Thumbs.db
 node_modules/
 Views/
 
+# API Collections
+insomnia-collection.json

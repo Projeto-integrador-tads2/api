@@ -7,56 +7,56 @@ using Interfaces;
 namespace Commands
 {
     // Command
-    public class UploadUserProfilePictureCommand : IRequest<FileUploadDto>
+    public class UploadServicePictureCommand : IRequest<FileUploadDto>
     {
-        public Guid UserId { get; set; }
+        public Guid ServiceId { get; set; }
         public IFormFile File { get; set; }
         public string? CustomFileName { get; set; }
     }
 
     // Handler
-    public class UploadUserProfilePictureCommandHandler : IRequestHandler<UploadUserProfilePictureCommand, FileUploadDto>
+    public class UploadServicePictureCommandHandler : IRequestHandler<UploadServicePictureCommand, FileUploadDto>
     {
         private readonly IFileStorageService _fileStorageService;
         private readonly AppDbContext _context;
-        private readonly ILogger<UploadUserProfilePictureCommandHandler> _logger;
+        private readonly ILogger<UploadServicePictureCommandHandler> _logger;
 
-        public UploadUserProfilePictureCommandHandler(
+        public UploadServicePictureCommandHandler(
             IFileStorageService fileStorageService,
             AppDbContext context,
-            ILogger<UploadUserProfilePictureCommandHandler> logger)
+            ILogger<UploadServicePictureCommandHandler> logger)
         {
             _fileStorageService = fileStorageService;
             _context = context;
             _logger = logger;
         }
 
-        public async Task<FileUploadDto> Handle(UploadUserProfilePictureCommand request, CancellationToken cancellationToken)
+        public async Task<FileUploadDto> Handle(UploadServicePictureCommand request, CancellationToken cancellationToken)
         {
             ValidateFile(request.File);
 
-            var user = await _context.User.FindAsync(request.UserId);
-            if (user == null)
-                throw new ArgumentException("Usuário não encontrado");
+            var service = await _context.Services.FindAsync(request.ServiceId);
+            if (service == null)
+                throw new ArgumentException("Serviço não encontrado");
 
             try
             {
                 var fileUrl = await _fileStorageService.UploadFileAsync(
                     request.File,
-                    "profile-pictures",
+                    "service-pictures",
                     request.CustomFileName
                 );
 
-                if (!string.IsNullOrEmpty(user.ProfilePicture))
+                if (!string.IsNullOrEmpty(service.ServicePicture))
                 {
-                    var oldFileKey = ExtractFileKeyFromUrl(user.ProfilePicture);
+                    var oldFileKey = ExtractFileKeyFromUrl(service.ServicePicture);
                     await _fileStorageService.DeleteFileAsync(oldFileKey);
                 }
 
-                user.UpdateProfilePicture(fileUrl);
+                service.Update(service.Name, service.Description, fileUrl);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                _logger.LogInformation("Profile picture uploaded for user {UserId}: {FileUrl}", request.UserId, fileUrl);
+                _logger.LogInformation("Service picture uploaded for service {ServiceId}: {FileUrl}", request.ServiceId, fileUrl);
 
                 return new FileUploadDto
                 {
@@ -69,7 +69,7 @@ namespace Commands
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error uploading profile picture for user {UserId}", request.UserId);
+                _logger.LogError(ex, "Error uploading service picture for service {ServiceId}", request.ServiceId);
                 throw new ApplicationException("Erro ao fazer upload da imagem");
             }
         }

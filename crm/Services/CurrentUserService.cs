@@ -1,6 +1,7 @@
 using Interfaces;
 using Models;
 using Data;
+using Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -27,6 +28,30 @@ namespace Services
             }
 
             return userId;
+        }
+
+        public string? GetCurrentUserName()
+        {
+            var nameClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name);
+            return nameClaim?.Value;
+        }
+
+        public string? GetCurrentUserEmail()
+        {
+            var emailClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email);
+            return emailClaim?.Value;
+        }
+
+        public UserRole? GetCurrentUserRole()
+        {
+            var roleClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role);
+
+            if (roleClaim == null || !Enum.TryParse<UserRole>(roleClaim.Value, out var role))
+            {
+                return null;
+            }
+
+            return role;
         }
 
         public async Task<UserModel?> GetCurrentUserAsync()
