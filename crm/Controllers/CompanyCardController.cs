@@ -30,7 +30,7 @@ namespace Controllers
             return Ok(result);
         }
 
-        [HttpPut("update/{companyCardId}")]
+        [HttpPatch("update/{companyCardId}")]
         public async Task<IActionResult> Update(Guid companyCardId, [FromBody] CompanyCardDto dto)
         {
             var command = new UpdateCompanyCardCommand
@@ -64,6 +64,14 @@ namespace Controllers
         public async Task<IActionResult> GetAll()
         {
             var query = new GetAllCompanyCardsQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("cards/{columnId}")]
+        public async Task<IActionResult> GetCardsByColumnId(Guid columnID)
+        {
+            var query = new GetCompanyCardsByColumnIdQuery { ColumnId = columnID };
             var result = await _mediator.Send(query);
             return Ok(result);
         }

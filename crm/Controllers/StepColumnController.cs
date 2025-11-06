@@ -30,7 +30,7 @@ namespace Controllers
             return Ok(result);
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPatch("update/{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] StepColumnDto dto)
         {
             var command = new UpdateStepColumnCommand
