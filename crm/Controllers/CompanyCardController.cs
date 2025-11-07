@@ -11,18 +11,23 @@ namespace Controllers
     public class CompanyCardController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly Interfaces.ICurrentUserService _currentUserService;
 
-        public CompanyCardController(IMediator mediator)
+        public CompanyCardController(IMediator mediator, Interfaces.ICurrentUserService currentUserService)
         {
             _mediator = mediator;
+            _currentUserService = currentUserService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] CompanyCardDto dto)
         {
+            var userId = _currentUserService.GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized("Usuário não autenticado.");
             var command = new RegisterCompanyCardCommand
             {
-                UserId = dto.UserId,
+                UserId = userId.Value,
                 CompanyId = dto.CompanyId,
                 StepColumnId = dto.StepColumnId
             };
