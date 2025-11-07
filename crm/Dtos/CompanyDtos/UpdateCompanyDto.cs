@@ -10,9 +10,6 @@ namespace Dtos.CompanyDtos
         [Required(ErrorMessage = "CNPJ é obrigatório")]
         public string Cnpj { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Cliente é obrigatório")]
-        public Guid ClientId { get; set; }
-
         public string? CompanyPicture { get; set; }
     }
 }

@@ -31,7 +31,6 @@ namespace Commands
                 CompanyId = company.Id,
                 Name = company.Name,
                 Cnpj = company.Cnpj,
-                ClientId = company.ClientId,
                 CompanyPicture = company.CompanyPicture
             };
         }
