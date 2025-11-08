@@ -75,12 +75,13 @@ namespace Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
-            [HttpGet("cards/grouped")]
-            public async Task<IActionResult> GetCardsGroupedByColumn()
-            {
-                var query = new GetAllCompanyCardsGroupedByColumnQuery();
-                var result = await _mediator.Send(query);
-                return Ok(result);
+        
+        [HttpGet("cards/grouped")]
+        public async Task<IActionResult> GetCardsGroupedByColumn()
+        {
+            var query = new GetAllCompanyCardsGroupedByColumnQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
             }
     }
 }

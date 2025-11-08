@@ -7,8 +7,9 @@ namespace Queries
 {
     public class CompanyCardsByColumnDto
     {
-        public Guid StepColumnId { get; set; }
-        public List<CompanyCardDto> Cards { get; set; }
+        public string Name { get; set; }
+        public Guid Id { get; set; }
+        public List<Dtos.CompanyCardDtos.CompanyCardDetailsDto> Cards { get; set; }
     }
 
     public class GetAllCompanyCardsGroupedByColumnQuery : IRequest<List<CompanyCardsByColumnDto>> { }
@@ -25,15 +26,23 @@ namespace Queries
         public async Task<List<CompanyCardsByColumnDto>> Handle(GetAllCompanyCardsGroupedByColumnQuery request, CancellationToken cancellationToken)
         {
             var groupedCards = await _context.Cards
+                .Include(card => card.User)
+                .Include(card => card.Company)
+                .Include(card => card.StepColumn)
                 .GroupBy(card => card.StepColumnId)
                 .Select(group => new CompanyCardsByColumnDto
                 {
-                    StepColumnId = group.Key,
-                    Cards = group.Select(card => new CompanyCardDto
+                    Name = group.First().StepColumn.Name,
+                    Id = group.Key,
+                    Cards = group.Select(card => new Dtos.CompanyCardDtos.CompanyCardDetailsDto
                     {
+                        Id = card.Id,
                         UserId = card.UserId,
+                        UserName = card.User.Name,
                         CompanyId = card.CompanyId,
-                        StepColumnId = card.StepColumnId
+                        CompanyName = card.Company.Name,
+                        StepColumnId = card.StepColumnId,
+                        StepColumnName = card.StepColumn.Name
                     }).ToList()
                 })
                 .ToListAsync(cancellationToken);
