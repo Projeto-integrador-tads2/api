@@ -9,6 +9,7 @@ namespace Queries
     {
         public string Name { get; set; }
         public Guid Id { get; set; }
+        public string Color { get; set; }
         public List<Dtos.CompanyCardDtos.CompanyCardDetailsDto> Cards { get; set; }
     }
 
@@ -25,29 +26,38 @@ namespace Queries
 
         public async Task<List<CompanyCardsByColumnDto>> Handle(GetAllCompanyCardsGroupedByColumnQuery request, CancellationToken cancellationToken)
         {
-            var groupedCards = await _context.Cards
+            var columns = await _context.StepColumn.ToListAsync(cancellationToken);
+            var cards = await _context.Cards
                 .Include(card => card.User)
                 .Include(card => card.Company)
                 .Include(card => card.StepColumn)
-                .GroupBy(card => card.StepColumnId)
-                .Select(group => new CompanyCardsByColumnDto
-                {
-                    Name = group.First().StepColumn.Name,
-                    Id = group.Key,
-                    Cards = group.Select(card => new Dtos.CompanyCardDtos.CompanyCardDetailsDto
-                    {
-                        Id = card.Id,
-                        UserId = card.UserId,
-                        UserName = card.User.Name,
-                        CompanyId = card.CompanyId,
-                        CompanyName = card.Company.Name,
-                        StepColumnId = card.StepColumnId,
-                        StepColumnName = card.StepColumn.Name
-                    }).ToList()
-                })
                 .ToListAsync(cancellationToken);
 
-            return groupedCards;
+            var grouped = columns
+                .GroupJoin(
+                    cards,
+                    column => column.Id,
+                    card => card.StepColumnId,
+                    (column, cardsGroup) => new CompanyCardsByColumnDto
+                    {
+                        Name = column.Name,
+                        Id = column.Id,
+                        Color = column.Color,
+                        Cards = cardsGroup.Select(card => new Dtos.CompanyCardDtos.CompanyCardDetailsDto
+                        {
+                            Id = card.Id,
+                            UserId = card.UserId,
+                            UserName = card.User?.Name,
+                            CompanyId = card.CompanyId,
+                            CompanyName = card.Company?.Name,
+                            StepColumnId = card.StepColumnId,
+                            StepColumnName = card.StepColumn?.Name
+                        }).ToList()
+                    }
+                )
+                .ToList();
+
+            return grouped;
         }
     }
 }
