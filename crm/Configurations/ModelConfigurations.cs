@@ -40,9 +40,9 @@ namespace Data.Configurations
         {
             builder
                 .HasOne(c => c.Company)
-                .WithOne(co => co.Client)
-                .HasForeignKey<ClientModel>(c => c.CompanyId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(co => co.Clients)
+                .HasForeignKey(c => c.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -23,14 +23,13 @@ namespace Controllers
             {
                 Name = dto.Name,
                 Cnpj = dto.Cnpj,
-                ClientId = dto.ClientId,
                 CompanyPicture = dto.CompanyPicture
             };
             var result = await _mediator.Send(command);
             return Ok(result);
         }
 
-        [HttpPut("update/{companyId}")]
+        [HttpPatch("update/{companyId}")]
         public async Task<IActionResult> Update(Guid companyId, [FromBody] UpdateCompanyDto dto)
         {
             var command = new UpdateCompanyCommand
@@ -38,7 +37,6 @@ namespace Controllers
                 CompanyId = companyId,
                 Name = dto.Name,
                 Cnpj = dto.Cnpj,
-                ClientId = dto.ClientId,
                 CompanyPicture = dto.CompanyPicture
             };
             var result = await _mediator.Send(command);

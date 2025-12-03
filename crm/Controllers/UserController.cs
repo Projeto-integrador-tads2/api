@@ -10,31 +10,33 @@ namespace Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
+    private readonly Interfaces.ICurrentUserService _currentUserService;
 
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, Interfaces.ICurrentUserService currentUserService)
         {
             _mediator = mediator;
+            _currentUserService = currentUserService;
         }
 
         /// <summary>
         /// Realiza upload de imagem que será usada como foto de perfil do usuário
         /// </summary>
-        [HttpPost("{userId}/profile-picture")]
+        [HttpPost("profile-picture")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadProfilePicture(
-            Guid userId, 
-            [FromForm] FileUploadDto request)
+        public async Task<IActionResult> UploadProfilePicture([FromForm] FileUploadDto request)
         {
-                var command = new UploadUserProfilePictureCommand
-                {
-                    UserId = userId,
-                    File = request.File!,
-                    CustomFileName = request.CustomFileName
-                };
-
-                var result = await _mediator.Send(command);
-                return Ok(result);
+            var userId = _currentUserService.GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized("Usuário não autenticado.");
+            var command = new UploadUserProfilePictureCommand
+            {
+                UserId = userId.Value,
+                File = request.File!,
+                CustomFileName = request.CustomFileName
+            };
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }

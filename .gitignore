@@ -356,3 +356,6 @@ appsettings.Development.json
 appsettings.Production.json
 wwwroot/uploads/
 wwwroot/images/
+
+
+venv/

@@ -15,8 +15,6 @@ namespace Commands
         public string Name { get; set; } = string.Empty;
         [Required]
         public string Cnpj { get; set; } = string.Empty;
-        [Required]
-        public Guid ClientId { get; set; }
         public string? CompanyPicture { get; set; }
     }
 
@@ -41,7 +39,7 @@ namespace Commands
             if (company == null)
                 throw new Exception("Empresa não encontrada");
 
-            company.Update(request.Name, request.Cnpj, request.ClientId, request.CompanyPicture);
+            company.Update(request.Name, request.Cnpj, request.CompanyPicture);
             await _context.SaveChangesAsync(cancellationToken);
 
             return new UpdateCompanyCommandResponse

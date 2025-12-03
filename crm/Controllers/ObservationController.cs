@@ -10,28 +10,33 @@ namespace Controllers
     [Route("api/[controller]")]
     public class ObservationController : ControllerBase
     {
-        private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
+    private readonly Interfaces.ICurrentUserService _currentUserService;
 
-        public ObservationController(IMediator mediator)
+        public ObservationController(IMediator mediator, Interfaces.ICurrentUserService currentUserService)
         {
             _mediator = mediator;
+            _currentUserService = currentUserService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterObservationDto dto)
         {
+            var userId = _currentUserService.GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized("Usuário não autenticado.");
             var command = new RegisterObservationCommand
             {
                 Title = dto.Title,
                 Content = dto.Content,
-                UserId = dto.UserId,
+                UserId = userId.Value,
                 CompanyCardId = dto.CompanyCardId
             };
             var result = await _mediator.Send(command);
             return Ok(result);
         }
 
-        [HttpPut("update/{observationId}")]
+        [HttpPatch("update/{observationId}")]
         public async Task<IActionResult> Update(Guid observationId, [FromBody] UpdateObservationDto dto)
         {
             var command = new UpdateObservationCommand
