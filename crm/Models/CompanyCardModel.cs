@@ -12,6 +12,7 @@ namespace Models
         public Guid StepColumnId { get; private set; }
         public string Priority { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         
         [ForeignKey("UserId")]
         public virtual UserModel User { get; private set; }
@@ -35,6 +36,7 @@ namespace Models
             StepColumnId = stepColumnId;
             Priority = "";
             Name = "";
+            Description = string.Empty;
         }
 
         private CompanyCardModel()

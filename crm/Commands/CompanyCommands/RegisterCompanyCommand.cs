@@ -17,6 +17,7 @@ namespace Commands
 
         public string? CompanyPicture { get; set; }
         public string Sector { get; set; } = string.Empty;
+        public string RepresentativeName { get; set; } = string.Empty;
     }
 
     public class RegisterCompanyCommandResponse
@@ -45,7 +46,8 @@ namespace Commands
 
             var company = new CompanyModel(request.Name, request.Cnpj, request.CompanyPicture)
             {
-                Sector = request.Sector
+                Sector = request.Sector,
+                RepresentativeName = request.RepresentativeName
             };
             _context.Company.Add(company);
             await _context.SaveChangesAsync(cancellationToken);

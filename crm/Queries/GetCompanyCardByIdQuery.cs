@@ -33,7 +33,8 @@ namespace Queries
                 CompanyId = companyCard.CompanyId,
                 StepColumnId = companyCard.StepColumnId,
                 Priority = companyCard.Priority,
-                Name = companyCard.Name
+                Name = companyCard.Name,
+                Description = companyCard.Description
             };
         }
     }

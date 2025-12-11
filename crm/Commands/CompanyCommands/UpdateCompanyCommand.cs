@@ -17,6 +17,7 @@ namespace Commands
         public string Cnpj { get; set; } = string.Empty;
         public string? CompanyPicture { get; set; }
         public string Sector { get; set; } = string.Empty;
+        public string RepresentativeName { get; set; } = string.Empty;
     }
 
     public class UpdateCompanyCommandResponse
@@ -42,6 +43,7 @@ namespace Commands
 
             company.Update(request.Name, request.Cnpj, request.CompanyPicture);
             company.Sector = request.Sector;
+            company.RepresentativeName = request.RepresentativeName;
             await _context.SaveChangesAsync(cancellationToken);
 
             return new UpdateCompanyCommandResponse

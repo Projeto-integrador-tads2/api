@@ -28,7 +28,9 @@ namespace Commands
                 Name = company.Name,
                 Cnpj = company.Cnpj,
                 CompanyPicture = company.CompanyPicture,
-                Sector = company.Sector
+                Sector = company.Sector,
+                RepresentativeName = company.RepresentativeName,
+                CreatedAt = company.CreatedAt
             }).ToList();
         }
     }
