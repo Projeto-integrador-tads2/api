@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
+using Dtos.Predict;
+using Queries;
 
 namespace Controllers
 {
@@ -11,112 +9,52 @@ namespace Controllers
     [Route("api/[controller]")]
     public class PredictController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        public PredictController(IHttpClientFactory httpClientFactory)
+        private readonly IMediator _mediator;
+        private readonly ILogger<PredictController> _logger;
+
+        public PredictController(IMediator mediator, ILogger<PredictController> logger)
         {
-            _httpClientFactory = httpClientFactory;
+            _mediator = mediator;
+            _logger = logger;
         }
 
-
-        public class PredictRequest
-        {
-            public Guid CompanyCardId { get; set; }
-        }
-
-        public class PredictResponse
-        {
-            public string result { get; set; }
-        }
-
+        /// <summary>
+        /// Obtém a predição de sucesso de um card usando IA
+        /// </summary>
+        /// <param name="request">Dados do card para predição</param>
+        /// <returns>Probabilidade de sucesso do card</returns>
         [HttpPost]
-        public async Task<IActionResult> Predict([FromBody] PredictRequest request)
+        [ProducesResponseType(typeof(PredictResponseDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Predict([FromBody] PredictRequestDto request)
         {
-            // Buscar dados do card e relacionados
-            // Supondo que você tenha um AppDbContext injetado (adicione via DI se necessário)
-            var db = (Data.AppDbContext)HttpContext.RequestServices.GetService(typeof(Data.AppDbContext));
-            var card = db.Cards
-                .Include(c => c.Company)
-                .Include(c => c.StepColumn)
-                .FirstOrDefault(c => c.Id == request.CompanyCardId);
-            if (card == null)
-                return NotFound("Card não encontrado");
-
-
-            // Buscar histórico de movimentações
-            var histories = db.Histories
-                .Where(h => h.CompanyCardId == card.Id)
-                .OrderBy(h => h.MovedAt)
-                .ToList();
-
-            // from_stage: penúltima coluna (ou a primeira se só houver uma)
-            string from_stage = histories.Count > 1 ?
-                db.StepColumn.FirstOrDefault(s => s.Id == histories[histories.Count - 2].ToStepColumnId)?.Name ?? card.StepColumn.Name :
-                card.StepColumn.Name;
-
-            // to_stage: última coluna
-            string to_stage = card.StepColumn.Name;
-
-            // total_moves: quantidade de movimentações
-            int total_moves = histories.Count;
-
-            // days_since_creation: dias desde a criação do card
-            int days_since_creation = (int)(DateTime.UtcNow - card.CreatedAt).TotalDays;
-
-            // current_stage_duration: dias desde a última movimentação (ou desde a criação se nunca movido)
-            DateTime lastMove = histories.Count > 0 ? histories[histories.Count - 1].MovedAt : card.CreatedAt;
-            int current_stage_duration = (int)(DateTime.UtcNow - lastMove).TotalDays;
-
-            // value: valor do card (se existir campo, senão coloque 0 ou ajuste para o seu modelo)
-            float value = 0; // Ajuste se houver campo de valor
-
-            // sector: setor do cliente
-            string sector = card.Company?.Sector ?? "";
-
-            // prioridade: prioridade do card
-            string prioridade = card.Priority ?? "";
-
-            // --- Validação dos campos antes de chamar a IA ---
-            var validStages = new[] { "Análise de Perfil", "Conversa com o Cliente", "Fechamento", "Negociação" };
-            var validSectors = new[] { "Comércio", "Educação", "Indústria", "Saúde", "Serviços", "Tecnologia" };
-
-            var errors = new List<string>();
-            if (!validStages.Contains(from_stage))
-                errors.Add($"from_stage deve ser um dos: [{string.Join(", ", validStages)}] (recebido: '{from_stage}')");
-            if (!validStages.Contains(to_stage))
-                errors.Add($"to_stage deve ser um dos: [{string.Join(", ", validStages)}] (recebido: '{to_stage}')");
-            if (!validSectors.Contains(sector))
-                errors.Add($"sector deve ser um dos: [{string.Join(", ", validSectors)}] (recebido: '{sector}')");
-
-            if (errors.Count > 0)
-                return BadRequest(new { detail = string.Join("; ", errors) });
-
-            // Montar JSON esperado pela IA
-            var iaRequest = new
+            try
             {
-                from_stage,
-                to_stage,
-                total_moves,
-                days_since_creation,
-                current_stage_duration,
-                value,
-                sector,
-                prioridade
-            };
+                var query = new GetCardPredictionQuery
+                {
+                    CompanyCardId = request.CompanyCardId
+                };
 
-            var client = _httpClientFactory.CreateClient();
-            var aiApiUrl = "http://localhost:8000/predict";
-            var json = JsonSerializer.Serialize(iaRequest);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await client.PostAsync(aiApiUrl, content);
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return StatusCode((int)response.StatusCode, error);
+                var result = await _mediator.Send(query);
+                return Ok(result);
             }
-            var responseString = await response.Content.ReadAsStringAsync();
-            var predictResponse = JsonSerializer.Deserialize<PredictResponse>(responseString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return Ok(predictResponse);
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Validation error for card {CardId}", request.CompanyCardId);
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error communicating with AI API for card {CardId}", request.CompanyCardId);
+                return StatusCode(500, new { error = "Erro ao comunicar com a API de IA", details = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error predicting card {CardId}", request.CompanyCardId);
+                return StatusCode(500, new { error = "Erro interno ao processar predição" });
+            }
         }
     }
 }
