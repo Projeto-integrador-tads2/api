@@ -16,6 +16,7 @@ namespace Data
         public DbSet<ObservationModel> Observations { get; set; }
         public DbSet<StepColumnModel> StepColumn { get; set; }
         public DbSet<UserModel> User { get; set; }
+        public DbSet<ServiceModel> Services { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
