@@ -16,6 +16,7 @@ namespace Commands
         public string Cnpj { get; set; } = string.Empty;
 
         public string? CompanyPicture { get; set; }
+        public string Sector { get; set; } = string.Empty;
     }
 
     public class RegisterCompanyCommandResponse
@@ -24,6 +25,7 @@ namespace Commands
         public string Name { get; set; } = string.Empty;
         public string Cnpj { get; set; } = string.Empty;
         public string? CompanyPicture { get; set; }
+        public string Sector { get; set; } = string.Empty;
         public string? Message { get; set; }
     }
 
@@ -41,7 +43,10 @@ namespace Commands
             if (await _context.Company.AnyAsync(c => c.Cnpj == request.Cnpj, cancellationToken))
                 throw new Exception("CNPJ já cadastrado");
 
-            var company = new CompanyModel(request.Name, request.Cnpj, request.CompanyPicture);
+            var company = new CompanyModel(request.Name, request.Cnpj, request.CompanyPicture)
+            {
+                Sector = request.Sector
+            };
             _context.Company.Add(company);
             await _context.SaveChangesAsync(cancellationToken);
 
@@ -51,6 +56,7 @@ namespace Commands
                 Name = company.Name,
                 Cnpj = company.Cnpj,
                 CompanyPicture = company.CompanyPicture,
+                Sector = company.Sector,
                 Message = "Empresa cadastrada com sucesso"
             };
         }

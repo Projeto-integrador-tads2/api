@@ -10,6 +10,7 @@ namespace Models
         public string Name { get; private set; }
         public string Cnpj { get; private set; }
         public string CompanyPicture { get; private set; }
+        public string Sector { get; set; }
 
         public virtual ICollection<ClientModel> Clients { get; private set; } = new List<ClientModel>();
         public virtual ICollection<CompanyCardModel> Cards { get; private set; } = new List<CompanyCardModel>();
@@ -24,6 +25,7 @@ namespace Models
             Name = name;
             Cnpj = cnpj;
             CompanyPicture = companyPicture;
+            Sector = string.Empty;
         }
 
         private CompanyModel()

@@ -51,7 +51,9 @@ namespace Queries
                             CompanyId = card.CompanyId,
                             CompanyName = card.Company?.Name,
                             StepColumnId = card.StepColumnId,
-                            StepColumnName = card.StepColumn?.Name
+                            StepColumnName = card.StepColumn?.Name,
+                            Priority = card.Priority,
+                            Name = card.Name
                         }).ToList()
                     }
                 )

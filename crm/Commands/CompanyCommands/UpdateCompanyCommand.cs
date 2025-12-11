@@ -16,6 +16,7 @@ namespace Commands
         [Required]
         public string Cnpj { get; set; } = string.Empty;
         public string? CompanyPicture { get; set; }
+        public string Sector { get; set; } = string.Empty;
     }
 
     public class UpdateCompanyCommandResponse
@@ -40,6 +41,7 @@ namespace Commands
                 throw new Exception("Empresa não encontrada");
 
             company.Update(request.Name, request.Cnpj, request.CompanyPicture);
+            company.Sector = request.Sector;
             await _context.SaveChangesAsync(cancellationToken);
 
             return new UpdateCompanyCommandResponse

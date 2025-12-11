@@ -11,5 +11,6 @@ namespace Dtos.CompanyDtos
         public string Cnpj { get; set; } = string.Empty;
 
         public string? CompanyPicture { get; set; }
+        public string Sector { get; set; } = string.Empty;
     }
 }

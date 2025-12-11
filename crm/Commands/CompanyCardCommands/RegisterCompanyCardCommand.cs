@@ -16,6 +16,9 @@ namespace Commands.CompanyCardCommands
 
         [Required(ErrorMessage = "Coluna é obrigatória")]
         public Guid StepColumnId { get; set; }
+
+        public string Priority { get; set; }
+        public string Name { get; set; }
     }
 
     public class RegisterCompanyCardCommandResponse
@@ -24,6 +27,8 @@ namespace Commands.CompanyCardCommands
         public Guid UserId { get; set; }
         public Guid CompanyId { get; set; }
         public Guid StepColumnId { get; set; }
+        public string Priority { get; set; }
+        public string Name { get; set; }
         public string? Message { get; set; }
     }
 
@@ -50,7 +55,11 @@ namespace Commands.CompanyCardCommands
             if (!await _context.StepColumn.AnyAsync(s => s.Id == request.StepColumnId, cancellationToken))
                 throw new Exception("Coluna não encontrada");
 
-            var companyCard = new CompanyCardModel(request.UserId, request.CompanyId, request.StepColumnId);
+            var companyCard = new CompanyCardModel(request.UserId, request.CompanyId, request.StepColumnId)
+            {
+                Priority = request.Priority,
+                Name = request.Name
+            };
             _context.Cards.Add(companyCard);
             await _context.SaveChangesAsync(cancellationToken);
 
@@ -60,6 +69,8 @@ namespace Commands.CompanyCardCommands
                 UserId = companyCard.UserId,
                 CompanyId = companyCard.CompanyId,
                 StepColumnId = companyCard.StepColumnId,
+                Priority = companyCard.Priority,
+                Name = companyCard.Name,
                 Message = "Card de empresa cadastrado com sucesso"
             };
         }

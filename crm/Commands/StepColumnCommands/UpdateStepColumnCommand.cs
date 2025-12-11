@@ -41,6 +41,8 @@ namespace Commands.StepColumnCommands
             var stepColumn = await _context.StepColumn.FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
             if (stepColumn == null)
                 throw new Exception("Coluna não encontrada");
+            if (stepColumn.IsDefault)
+                throw new InvalidOperationException("Não é permitido editar as colunas padrão do sistema.");
 
             stepColumn.Update(request.Name, request.Color);
             await _context.SaveChangesAsync(cancellationToken);

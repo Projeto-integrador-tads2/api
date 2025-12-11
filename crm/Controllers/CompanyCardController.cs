@@ -29,7 +29,9 @@ namespace Controllers
             {
                 UserId = userId.Value,
                 CompanyId = dto.CompanyId,
-                StepColumnId = dto.StepColumnId
+                StepColumnId = dto.StepColumnId,
+                Priority = dto.Priority,
+                Name = dto.Name
             };
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -43,7 +45,9 @@ namespace Controllers
                 CompanyCardId = companyCardId,
                 UserId = dto.UserId,
                 CompanyId = dto.CompanyId,
-                StepColumnId = dto.StepColumnId
+                StepColumnId = dto.StepColumnId,
+                Priority = dto.Priority,
+                Name = dto.Name
             };
             var result = await _mediator.Send(command);
             return Ok(result);

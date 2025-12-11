@@ -18,6 +18,9 @@ namespace Commands.CompanyCardCommands
 
         [Required(ErrorMessage = "Coluna é obrigatória")]
         public Guid StepColumnId { get; set; }
+
+        public string Priority { get; set; }
+        public string Name { get; set; }
     }
 
     public class UpdateCompanyCardCommandResponse
@@ -26,6 +29,8 @@ namespace Commands.CompanyCardCommands
         public Guid UserId { get; set; }
         public Guid CompanyId { get; set; }
         public Guid StepColumnId { get; set; }
+        public string Priority { get; set; }
+        public string Name { get; set; }
         public string? Message { get; set; }
     }
 
@@ -59,6 +64,8 @@ namespace Commands.CompanyCardCommands
                 throw new Exception("Coluna não encontrada");
 
             companyCard.Update(request.UserId, request.CompanyId, request.StepColumnId);
+            companyCard.Priority = request.Priority;
+            companyCard.Name = request.Name;
             await _context.SaveChangesAsync(cancellationToken);
 
             return new UpdateCompanyCardCommandResponse
@@ -67,6 +74,8 @@ namespace Commands.CompanyCardCommands
                 UserId = companyCard.UserId,
                 CompanyId = companyCard.CompanyId,
                 StepColumnId = companyCard.StepColumnId,
+                Priority = companyCard.Priority,
+                Name = companyCard.Name,
                 Message = "Card de empresa atualizado com sucesso"
             };
         }

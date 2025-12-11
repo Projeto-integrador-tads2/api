@@ -4,6 +4,7 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiMvcSwagger.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251211010852_AddPriorityAndNameToCompanyCard")]
+    partial class AddPriorityAndNameToCompanyCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,9 +110,6 @@ namespace ApiMvcSwagger.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sector")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -206,9 +206,6 @@ namespace ApiMvcSwagger.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDefault")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
