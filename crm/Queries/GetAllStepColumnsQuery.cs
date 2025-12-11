@@ -20,7 +20,9 @@ namespace Queries
 
         public async Task<List<StepColumnDto>> Handle(GetAllStepColumnsQuery request, CancellationToken cancellationToken)
         {
-            var stepColumns = await _context.StepColumn.ToListAsync(cancellationToken);
+            var stepColumns = await _context.StepColumn
+                .OrderBy(sc => sc.Order)
+                .ToListAsync(cancellationToken);
 
             return stepColumns.Select(stepColumn => new StepColumnDto
             {
