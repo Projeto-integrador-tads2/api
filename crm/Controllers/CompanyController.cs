@@ -24,7 +24,8 @@ namespace Controllers
                 Name = dto.Name,
                 Cnpj = dto.Cnpj,
                 CompanyPicture = dto.CompanyPicture,
-                Sector = dto.Sector
+                Sector = dto.Sector,
+                RepresentativeName = dto.RepresentativeName
             };
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -39,7 +40,8 @@ namespace Controllers
                 Name = dto.Name,
                 Cnpj = dto.Cnpj,
                 CompanyPicture = dto.CompanyPicture,
-                Sector = dto.Sector
+                Sector = dto.Sector,
+                RepresentativeName = dto.RepresentativeName
             };
             var result = await _mediator.Send(command);
             return Ok(result);
