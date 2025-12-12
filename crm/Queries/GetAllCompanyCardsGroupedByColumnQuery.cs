@@ -53,7 +53,8 @@ namespace Queries
                             StepColumnId = card.StepColumnId,
                             StepColumnName = card.StepColumn?.Name,
                             Priority = card.Priority,
-                            Name = card.Name
+                            Name = card.Name,
+                            Description = card.Description
                         }).ToList()
                     }
                 )

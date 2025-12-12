@@ -96,6 +96,6 @@ namespace Controllers
             var query = new GetAllCompanyCardsGroupedByColumnQuery();
             var result = await _mediator.Send(query);
             return Ok(result);
-            }
+        }
     }
 }
