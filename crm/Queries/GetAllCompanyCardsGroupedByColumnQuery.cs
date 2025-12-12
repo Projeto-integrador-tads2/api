@@ -10,6 +10,7 @@ namespace Queries
         public string Name { get; set; }
         public Guid Id { get; set; }
         public string Color { get; set; }
+        public int Order { get; set; }
         public List<Dtos.CompanyCardDtos.CompanyCardDetailsDto> Cards { get; set; }
     }
 
@@ -43,6 +44,7 @@ namespace Queries
                         Name = column.Name,
                         Id = column.Id,
                         Color = column.Color,
+                        Order = column.Order,
                         Cards = cardsGroup.Select(card => new Dtos.CompanyCardDtos.CompanyCardDetailsDto
                         {
                             Id = card.Id,
