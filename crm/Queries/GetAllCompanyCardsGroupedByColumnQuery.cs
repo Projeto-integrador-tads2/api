@@ -27,7 +27,7 @@ namespace Queries
 
         public async Task<List<CompanyCardsByColumnDto>> Handle(GetAllCompanyCardsGroupedByColumnQuery request, CancellationToken cancellationToken)
         {
-            var columns = await _context.StepColumn.ToListAsync(cancellationToken);
+            var columns = await _context.StepColumn.OrderBy(c => c.Order).ToListAsync(cancellationToken);
             var cards = await _context.Cards
                 .Include(card => card.User)
                 .Include(card => card.Company)
