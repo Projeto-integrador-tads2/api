@@ -18,19 +18,21 @@
 - .NET 8 SDK
 - MySQL 8
 
+
 ## Passo-a-passo de instalação
 1. Clone o repositório:
    ```bash
    git clone <repo-url>
-   cd api/crm
+   cd api
    ```
 2. Configure variáveis de ambiente em `.env` ou `appsettings.Development.json`.
-3. Inicie os serviços:
+3. Inicie todos os serviços (incluindo IA):
    ```bash
-   docker-compose up -d
+   docker-compose up -d --build
    ```
-4. Instale dependências .NET:
+4. Instale dependências .NET (se for rodar fora do Docker):
    ```bash
+   cd crm
    dotnet restore
    ```
 5. Execute migrações e seed:
@@ -40,6 +42,24 @@
    ./start.sh
    ```
 6. Acesse Swagger em `http://localhost:5000/swagger` (ou porta configurada).
+7. Acesse a documentação da API de IA (FastAPI) em `/docs` dentro do container de IA, ou consulte o arquivo `ai/README.md`.
+## Como rodar/testar a API de IA separadamente
+
+1. Entre na pasta `ai`:
+   ```bash
+   cd ai
+   ```
+2. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Execute a API:
+   ```bash
+   uvicorn app:app --reload
+   ```
+4. Acesse a documentação interativa em: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+Consulte exemplos de request/response e explicação dos campos em `ai/README.md`.
 
 ## Como rodar testes e checks
 - Testes unitários/integrados: TODO: Confirmar localização dos testes

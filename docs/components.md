@@ -26,12 +26,15 @@
 | CurrentUserService | Services/CurrentUserService.cs | Identificação do usuário | GetCurrentUserId |
 | AppDbContext | Contexts/AppDbContext.cs | Contexto do banco de dados | DbSets, Migrations |
 | DatabaseSeeder | Data/Seed/DatabaseSeeder.cs | Seed inicial do banco | SeedAsync |
+| IA API (FastAPI) | ai/app.py | Predição de probabilidade de sucesso (Machine Learning) | POST /predict |
+
 
 ## Dependências internas
 - Controllers dependem de Commands, Queries, Dtos, Services.
 - Services dependem de configurações e interfaces.
 - Models são usados por Commands, Queries e Services.
 - Middleware aplica filtros nas respostas das APIs.
+- A API de IA (FastAPI) é consumida internamente pela API principal para predição de oportunidades.
 
 ## Guideline para componentes
 - Adicionar novo componente: criar pasta/arquivo em `Controllers/`, `Services/` ou `Models/` conforme tipo.
