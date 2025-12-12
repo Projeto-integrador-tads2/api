@@ -10,9 +10,10 @@
 - [Referências](#referências)
 - [TODOs / Perguntas](#todos--perguntas)
 
+
 ## Tabela de Endpoints
-| Método | Rota | Controlador | Autenticação | Descrição |
-|--------|------|-------------|--------------|-----------|
+| Método | Rota | Controlador/Serviço | Autenticação | Descrição |
+|--------|------|---------------------|--------------|-----------|
 | POST   | /api/auth/register         | AuthController         | JWT + Admin | Registrar usuário |
 | POST   | /api/client/register       | ClientController       | JWT + Admin | Registrar cliente |
 | POST   | /api/company/register      | CompanyController      | JWT         | Registrar empresa |
@@ -23,6 +24,50 @@
 | POST   | /api/stepcolumn/register   | StepColumnController   | JWT         | Registrar coluna de etapa |
 | PATCH  | /api/stepcolumn/update/{id}| StepColumnController   | JWT         | Atualizar coluna de etapa |
 | POST   | /api/user/profile-picture  | UserController         | JWT         | Upload foto de perfil |
+| POST   | /predict                   | IA (FastAPI)           | Interno     | Predição de probabilidade |
+## Integração com API de IA (Machine Learning)
+
+O sistema agora conta com uma API de IA (FastAPI, Python) para predição de probabilidade de sucesso de oportunidades.
+A comunicação é feita internamente via Docker Compose, sem expor a IA externamente.
+
+### Endpoint principal
+
+- `POST /predict` (serviço de IA)
+
+#### Exemplo de request
+```json
+{
+  "from_stage": "Conversa com o Cliente",
+  "to_stage": "Negociação",
+  "total_moves": 3,
+  "days_since_creation": 15,
+  "current_stage_duration": 5,
+  "value": 12000,
+  "sector": "Serviços",
+  "prioridade": "Média"
+}
+```
+
+#### Exemplo de response
+```json
+{
+  "result": "Muito Provável"
+}
+```
+
+#### Significado dos campos
+| Campo                   | Descrição                                                                 |
+|------------------------ |--------------------------------------------------------------------------|
+| `from_stage`            | Último stepColumn de origem (ex: "Conversa com o Cliente")               |
+| `to_stage`              | Último stepColumn para o qual foi movido (ex: "Negociação")              |
+| `total_moves`           | Total de movimentações do card entre etapas                               |
+| `days_since_creation`   | Total de dias desde a criação do card no sistema                          |
+| `current_stage_duration`| Total de dias no stepColumn atual                                         |
+| `value`                 | Valor da oportunidade (card)                                             |
+| `sector`                | Setor do cliente (ex: "Serviços") — **(ainda não existe no back-end)**   |
+| `prioridade`            | Prioridade da oportunidade (ex: "Média") — **(ainda não existe no back-end)** |
+
+Para mais detalhes, consulte `ai/README.md`.
 
 ## Esquema de autenticação
 - **JWT Bearer:**

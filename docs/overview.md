@@ -19,8 +19,10 @@ Sistema de CRM (Customer Relationship Management) para gestão de clientes, empr
 ## Público alvo
 Empresas e equipes que precisam organizar e acompanhar o relacionamento com clientes e oportunidades.
 
+
 ## Stack principal
 - **Backend:** C# (.NET 8)
+- **IA/API de Machine Learning:** Python (FastAPI)
 - **ORM:** Entity Framework Core 9
 - **Banco de dados:** MySQL 8
 - **Armazenamento de arquivos:** MinIO (Cloudflare R2 compatível)
@@ -28,7 +30,8 @@ Empresas e equipes que precisam organizar e acompanhar o relacionamento com clie
 - **API:** RESTful
 - **Containerização:** Docker
 - **Orquestração:** Docker Compose
-- **Documentação:** Swagger
+- **Documentação:** Swagger, FastAPI Docs
+
 
 ## Diagrama de alto nível
 ```mermaid
@@ -42,6 +45,9 @@ graph TD
         StepColumnController
         UserController
     end
+    subgraph IA
+        FastAPI
+    end
     subgraph DB
         MySQL
     end
@@ -50,14 +56,28 @@ graph TD
     end
     API --> MySQL
     API --> MinIO
+    API --> FastAPI
 ```
 
-## Principais módulos
 - **Controllers/**: Endpoints REST
 - **Commands/**: Lógica de comandos (CQRS)
 - **Queries/**: Consultas (CQRS)
 - **Models/**: Entidades do domínio
 - **Dtos/**: Data Transfer Objects
+- **ai/**: API de IA (FastAPI) para predição de probabilidade
+## Novas funcionalidades
+
+- **Integração com API de IA:**
+    - O sistema agora integra uma API de Machine Learning (FastAPI) para predição de probabilidade de sucesso de oportunidades.
+    - Comunicação interna via Docker Compose, sem expor a IA externamente.
+    - Endpoint principal: `POST /predict` (ver documentação em `ai/README.md`).
+
+- **Novos campos para oportunidades:**
+    - `sector` (Setor do cliente)
+    - `prioridade` (Prioridade da oportunidade)
+    - Ambos são necessários para a predição, mas ainda não existem no back-end principal.
+
+Consulte também a documentação detalhada da IA em `ai/README.md`.
 - **Services/**: Serviços internos (ex.: storage, usuário)
 - **Migrations/**: Migrações do banco
 - **Configurations/**: Configuração de modelos
