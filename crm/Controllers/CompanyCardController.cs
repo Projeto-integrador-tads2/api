@@ -31,7 +31,8 @@ namespace Controllers
                 CompanyId = dto.CompanyId,
                 StepColumnId = dto.StepColumnId,
                 Priority = dto.Priority,
-                Name = dto.Name
+                Name = dto.Name,
+                Description = dto.Description
             };
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -50,7 +51,8 @@ namespace Controllers
                 CompanyId = dto.CompanyId,
                 StepColumnId = dto.StepColumnId,
                 Priority = dto.Priority,
-                Name = dto.Name
+                Name = dto.Name,
+                Description = dto.Description
             };
             var result = await _mediator.Send(command);
             return Ok(result);
