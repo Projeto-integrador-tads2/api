@@ -73,14 +73,12 @@ services:
       - crm-network
 
   # ==================== API PYTHON (AI) ====================
-  # Esta API NÃO expõe portas para o host - acessível apenas via rede interna
   ai-api:
     build:
       context: ./ai
       dockerfile: Dockerfile
     container_name: ai-api
     restart: always
-    # SEM "ports:" - não acessível externamente, apenas pela rede interna
     networks:
       - crm-network
     healthcheck:
