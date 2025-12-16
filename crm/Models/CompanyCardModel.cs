@@ -10,6 +10,9 @@ namespace Models
         public Guid UserId { get; private set; }
         public Guid CompanyId { get; private set; }
         public Guid StepColumnId { get; private set; }
+        public string Priority { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         
         [ForeignKey("UserId")]
         public virtual UserModel User { get; private set; }
@@ -28,10 +31,12 @@ namespace Models
             Guard.Against.Default(userId, nameof(userId));
             Guard.Against.Default(companyId, nameof(companyId));
             Guard.Against.Default(stepColumnId, nameof(stepColumnId));
-            
             UserId = userId;
             CompanyId = companyId;
             StepColumnId = stepColumnId;
+            Priority = "";
+            Name = "";
+            Description = string.Empty;
         }
 
         private CompanyCardModel()
@@ -43,7 +48,6 @@ namespace Models
             Guard.Against.Default(userId, nameof(userId));
             Guard.Against.Default(companyId, nameof(companyId));
             Guard.Against.Default(stepColumnId, nameof(stepColumnId));
-            
             UserId = userId;
             CompanyId = companyId;
             StepColumnId = stepColumnId;

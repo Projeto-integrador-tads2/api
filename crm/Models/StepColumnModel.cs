@@ -11,6 +11,7 @@ namespace Models
         public int Order { get; private set; }
         public string Color { get; private set; }
         public bool IsActive { get; private set; }
+        public bool IsDefault { get; private set; }
         
         public virtual ICollection<CompanyCardModel> Cards { get; private set; } = new List<CompanyCardModel>();
         public virtual ICollection<HistoryModel> HistoriesAsFrom { get; private set; } = new List<HistoryModel>();
@@ -32,6 +33,7 @@ namespace Models
             Order = order;
             Color = color;
             IsActive = true;
+            IsDefault = false;
         }
 
         private StepColumnModel()
@@ -49,6 +51,8 @@ namespace Models
                 throw new ArgumentException("Color must be in hex format (#RRGGBB)", nameof(color));
             }
             
+            if (IsDefault)
+                throw new InvalidOperationException("Colunas padrão não podem ser editadas.");
             Name = name;
             Color = color;
             SetUpdatedAt();
@@ -58,6 +62,8 @@ namespace Models
         {
             Guard.Against.NegativeOrZero(newOrder, nameof(newOrder));
             
+            if (IsDefault)
+                throw new InvalidOperationException("Colunas padrão não podem ser editadas.");
             Order = newOrder;
             SetUpdatedAt();
         }

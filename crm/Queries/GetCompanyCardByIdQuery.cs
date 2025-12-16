@@ -31,7 +31,10 @@ namespace Queries
             {
                 UserId = companyCard.UserId,
                 CompanyId = companyCard.CompanyId,
-                StepColumnId = companyCard.StepColumnId
+                StepColumnId = companyCard.StepColumnId,
+                Priority = companyCard.Priority,
+                Name = companyCard.Name,
+                Description = companyCard.Description
             };
         }
     }

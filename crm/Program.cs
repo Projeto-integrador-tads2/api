@@ -14,9 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
+// File Storage and AI Prediction Services
 builder.Services.AddScoped<Interfaces.IFileStorageService, Services.CloudflareR2Service>();
+builder.Services.AddScoped<Interfaces.IAIPredictionService, Services.AIPredictionService>();
 builder.Services.AddScoped<Interfaces.ICurrentUserService, Services.CurrentUserService>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient(); // Para comunicação com API Python
 
 builder.Services.Configure<FormOptions>(options =>
 {
@@ -84,6 +87,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHttpClient();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocal3000",

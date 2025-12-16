@@ -9,5 +9,8 @@ namespace Dtos.CompanyCardDtos
         public string CompanyName { get; set; }
         public Guid StepColumnId { get; set; }
         public string StepColumnName { get; set; }
+        public string Priority { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

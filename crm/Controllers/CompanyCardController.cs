@@ -29,7 +29,10 @@ namespace Controllers
             {
                 UserId = userId.Value,
                 CompanyId = dto.CompanyId,
-                StepColumnId = dto.StepColumnId
+                StepColumnId = dto.StepColumnId,
+                Priority = dto.Priority,
+                Name = dto.Name,
+                Description = dto.Description
             };
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -38,12 +41,18 @@ namespace Controllers
         [HttpPatch("update/{companyCardId}")]
         public async Task<IActionResult> Update(Guid companyCardId, [FromBody] CompanyCardDto dto)
         {
+            var userId = _currentUserService.GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized("Usuário não autenticado.");
             var command = new UpdateCompanyCardCommand
             {
                 CompanyCardId = companyCardId,
-                UserId = dto.UserId,
+                UserId = userId.Value,
                 CompanyId = dto.CompanyId,
-                StepColumnId = dto.StepColumnId
+                StepColumnId = dto.StepColumnId,
+                Priority = dto.Priority,
+                Name = dto.Name,
+                Description = dto.Description
             };
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -87,6 +96,6 @@ namespace Controllers
             var query = new GetAllCompanyCardsGroupedByColumnQuery();
             var result = await _mediator.Send(query);
             return Ok(result);
-            }
+        }
     }
 }

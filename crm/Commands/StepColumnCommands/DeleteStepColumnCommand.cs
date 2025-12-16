@@ -28,6 +28,8 @@ namespace Commands.StepColumnCommands
             var stepColumn = await _context.StepColumn.FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
             if (stepColumn == null)
                 throw new Exception("Coluna não encontrada");
+            if (stepColumn.IsDefault)
+                throw new InvalidOperationException("Não é permitido excluir as colunas padrão do sistema.");
 
             _context.StepColumn.Remove(stepColumn);
             await _context.SaveChangesAsync(cancellationToken);

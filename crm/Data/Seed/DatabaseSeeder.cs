@@ -18,12 +18,37 @@ namespace Data.Seed
             try
             {
                 await SeedAdminUserAsync(context, logger);
+                await SeedDefaultStepColumnsAsync(context, logger);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Erro ao executar seed do banco de dados");
                 throw;
             }
+        }
+
+        private static async Task SeedDefaultStepColumnsAsync(AppDbContext context, ILogger logger)
+        {
+            var defaultColumns = new[]
+            {
+                new { Name = "Análise de Perfil", Color = "#2196F3", Order = 1 },
+                new { Name = "Conversa com o Cliente", Color = "#4CAF50", Order = 2 },
+                new { Name = "Negociação", Color = "#FFC107", Order = 3 },
+                new { Name = "Fechamento", Color = "#F44336", Order = 4 }
+            };
+
+            foreach (var col in defaultColumns)
+            {
+                var exists = await context.StepColumn.AnyAsync(x => x.Name == col.Name && x.IsDefault);
+                if (!exists)
+                {
+                    var stepColumn = new StepColumnModel(col.Name, col.Order, col.Color);
+                    stepColumn.GetType().GetProperty("IsDefault")?.SetValue(stepColumn, true);
+                    context.StepColumn.Add(stepColumn);
+                    logger.LogInformation($"Coluna padrão '{col.Name}' criada.");
+                }
+            }
+            await context.SaveChangesAsync();
         }
 
         /// <summary>

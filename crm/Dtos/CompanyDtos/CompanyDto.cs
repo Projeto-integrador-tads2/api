@@ -6,5 +6,8 @@ namespace Dtos.CompanyDtos
         public string Name { get; set; } = string.Empty;
         public string Cnpj { get; set; } = string.Empty;
         public string? CompanyPicture { get; set; }
+        public string Sector { get; set; } = string.Empty;
+        public string RepresentativeName { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -65,6 +65,15 @@ namespace ApiMvcSwagger.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Priority")
+                        .HasColumnType("longtext");
+
                     b.Property<Guid>("StepColumnId")
                         .HasColumnType("char(36)");
 
@@ -101,6 +110,12 @@ namespace ApiMvcSwagger.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RepresentativeName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sector")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -184,6 +199,38 @@ namespace ApiMvcSwagger.Migrations
                     b.ToTable("Observations");
                 });
 
+            modelBuilder.Entity("Models.ServiceModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("ContractDuration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ServicePicture")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
             modelBuilder.Entity("Models.StepColumnModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -197,6 +244,9 @@ namespace ApiMvcSwagger.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDefault")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")

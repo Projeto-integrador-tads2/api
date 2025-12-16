@@ -10,6 +10,7 @@ namespace Queries
         public string Name { get; set; }
         public Guid Id { get; set; }
         public string Color { get; set; }
+        public int Order { get; set; }
         public List<Dtos.CompanyCardDtos.CompanyCardDetailsDto> Cards { get; set; }
     }
 
@@ -26,7 +27,7 @@ namespace Queries
 
         public async Task<List<CompanyCardsByColumnDto>> Handle(GetAllCompanyCardsGroupedByColumnQuery request, CancellationToken cancellationToken)
         {
-            var columns = await _context.StepColumn.ToListAsync(cancellationToken);
+            var columns = await _context.StepColumn.OrderBy(c => c.Order).ToListAsync(cancellationToken);
             var cards = await _context.Cards
                 .Include(card => card.User)
                 .Include(card => card.Company)
@@ -43,6 +44,7 @@ namespace Queries
                         Name = column.Name,
                         Id = column.Id,
                         Color = column.Color,
+                        Order = column.Order,
                         Cards = cardsGroup.Select(card => new Dtos.CompanyCardDtos.CompanyCardDetailsDto
                         {
                             Id = card.Id,
@@ -51,7 +53,10 @@ namespace Queries
                             CompanyId = card.CompanyId,
                             CompanyName = card.Company?.Name,
                             StepColumnId = card.StepColumnId,
-                            StepColumnName = card.StepColumn?.Name
+                            StepColumnName = card.StepColumn?.Name,
+                            Priority = card.Priority,
+                            Name = card.Name,
+                            Description = card.Description
                         }).ToList()
                     }
                 )

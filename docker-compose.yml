@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+  # ==================== INFRAESTRUTURA ====================
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -37,10 +38,16 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - crm-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # ==================== API C# (CRM) ====================
   api:
     build:
-      context: .
+      context: ./crm
       dockerfile: Dockerfile
     container_name: crm-api
     restart: always
@@ -55,11 +62,36 @@ services:
       - CloudflareR2__SecretAccessKey=minioadmin123
       - CloudflareR2__BucketName=crm-files
       - CloudflareR2__PublicUrl=http://localhost:9002/crm-files
+      # URL da API de IA (acessível apenas internamente)
+      - AI_API_URL=http://ai-api:8000
     depends_on:
-      - mysql
-      - minio
+      mysql:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     networks:
       - crm-network
+
+  # ==================== API PYTHON (AI) ====================
+  ai-api:
+    build:
+      context: ./ai
+      dockerfile: Dockerfile
+    container_name: ai-api
+    restart: always
+    networks:
+      - crm-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   crm-network:
